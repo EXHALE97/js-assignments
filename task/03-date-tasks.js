@@ -22,7 +22,7 @@
  *    'Sun, 17 May 1998 03:00:00 GMT+01' => Date()
  */
 function parseDataFromRfc2822(value) {
-   throw new Error('Not implemented');
+   return Date.parse(value);
 }
 
 /**
@@ -37,7 +37,7 @@ function parseDataFromRfc2822(value) {
  *    '2016-01-19T08:07:37Z' => Date()
  */
 function parseDataFromIso8601(value) {
-   throw new Error('Not implemented');
+    return Date.parse(value);
 }
 
 
@@ -45,8 +45,8 @@ function parseDataFromIso8601(value) {
  * Returns true if specified date is leap year and false otherwise
  * Please find algorithm here: https://en.wikipedia.org/wiki/Leap_year#Algorithm
  *
- * @param {date} date
- * @return {bool}
+ * @param {Date} date
+ * @return {boolean}
  *
  * @example :
  *    Date(1900,1,1)    => false
@@ -56,7 +56,12 @@ function parseDataFromIso8601(value) {
  *    Date(2015,1,1)    => false
  */
 function isLeapYear(date) {
-   throw new Error('Not implemented');
+    let year = date.getFullYear();
+    if(year % 4 !== 0 ){
+       return false;
+    } else if (year % 100 !== 0){
+       return true;
+    } else return year % 400 === 0;
 }
 
 
@@ -64,8 +69,8 @@ function isLeapYear(date) {
  * Returns the string represention of the timespan between two dates.
  * The format of output string is "HH:mm:ss.sss"
  *
- * @param {date} startDate
- * @param {date} endDate
+ * @param {Date} startDate
+ * @param {Date} endDate
  * @return {string}
  *
  * @example:
@@ -76,7 +81,39 @@ function isLeapYear(date) {
  *    Date(2000,1,1,10,0,0),  Date(2000,1,1,15,20,10,453)   => "05:20:10.453"
  */
 function timeSpanToString(startDate, endDate) {
-   throw new Error('Not implemented');
+    let date = new Date(Math.abs(startDate - endDate));
+    date.setHours(date.getHours()-3);
+    let result = "",
+        milliseconds = date.getMilliseconds(),
+        seconds = date.getSeconds(),
+        minutes = date.getMinutes(),
+        hours = date.getHours();
+
+    if(hours < 10){
+        result = result + '0' + hours;
+    } else result = result + hours;
+
+    result = result + ':';
+
+    if(minutes < 10){
+        result = result + '0' + minutes;
+    } else result = result + minutes;
+
+    result = result + ':';
+
+    if(seconds < 10){
+        result = result + '0' + seconds;
+    } else result = result + seconds;
+
+    result = result + '.';
+
+    if(milliseconds < 10){
+        result = result + '00' + milliseconds;
+    } else if(milliseconds > 10 && milliseconds < 100){
+        result = result + '0' + milliseconds;
+    } else result = result + milliseconds;
+
+    return result;
 }
 
 
